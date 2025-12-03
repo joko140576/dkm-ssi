@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal Masjid — One Page</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #e8f6ef;
+      --bg-2: #d8efe2;
+      --card: #f8fff9;
+      --green-1: #0b8a56;
+      --green-2: #2fa36e;
+      --gold: #caa43a;
+      --muted: #2f5b4a;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--muted);background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 100%);}
+
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px;
+      box-sizing:border-box;
+      background-image:
+        radial-gradient( circle at 10% 10%, rgba(11,138,86,0.06) 0%, transparent 18%),
+        radial-gradient( circle at 90% 85%, rgba(47,91,74,0.05) 0%, transparent 14%);
+      background-blend-mode: overlay;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image: url('data:image/svg+xml;utf8,\
+        <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">\
+          <defs>\
+            <pattern id="p" width="120" height="120" patternUnits="userSpaceOnUse">\
+              <rect width="120" height="120" fill="%23ffffff" opacity="0"/>\
+              <g fill="none" stroke="%23c7d9c8" stroke-width="2">\
+                <path d="M60 0 L74 36 L110 36 L82 58 L92 96 L60 74 L28 96 L38 58 L10 36 L46 36 Z" />\
+              </g>\
+            </pattern>\
+          </defs>\
+          <rect width="100%" height="100%" fill="url(%23p)" opacity="0.12"/>\
+        </svg>');
+      opacity:0.75;
+      pointer-events:none;
+      z-index:0;
+      mix-blend-mode: multiply;
+      filter: blur(0.2px) saturate(0.9);
+    }
+
+    .card-main{
+      width: 1600px;
+      max-width:98vw;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,255,250,0.95));
+      border-radius:18px;
+      padding:24px;
+      box-shadow: 0 18px 50px rgba(11, 77, 52, 0.12);
+      border: 2px solid rgba(11,138,86,0.06);
+      position:relative;
+      z-index:1;
+    }
+
+    .header{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+
+    .brand{display:flex;gap:14px;align-items:center}
+    .brand h1{margin:0;font-size:26px;color:var(--green-1);font-weight:700}
+    .brand p{margin:0;color:var(--muted);font-size:14px}
+
+    .top-row{display:flex;gap:16px;align-items:stretch}
+    .pray{
+      flex:1;
+      background:linear-gradient(180deg, rgba(11,138,86,0.06), rgba(47,91,74,0.03));
+      padding:16px;border-radius:12px;border:1px solid rgba(11,138,86,0.08);
+      display:flex;gap:18px;align-items:center;
+    }
+    .pray .left{min-width:220px}
+    .pray h2{margin:0;color:var(--green-1);font-size:22px}
+    .small{font-size:13px;color:var(--muted)}
+
+    .clock-card{
+      width:260px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,255,245,0.98));
+      border-radius:12px;padding:14px;border:1px solid rgba(11,138,86,0.07);
+      text-align:center;display:flex;flex-direction:column;justify-content:center;
+    }
+    .clock-now{font-size:36px;color:var(--green-1);font-weight:800}
+    .hijri-now{font-size:13px;color:var(--muted);margin-top:6px}
+
+    .times{display:flex;gap:12px;flex-wrap:wrap}
+    .pbox{background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));padding:12px 16px;border-radius:10px;min-width:140px;text-align:center;border:1px solid rgba(11,138,86,0.06)}
+    .pbox .name{font-weight:700;color:var(--green-1)}
+    .pbox .time{font-size:20px;color:#0b3b2a;margin-top:6px}
+    .countdown{font-size:14px;color:var(--muted);margin-top:6px}
+
+    .two-cols{display:flex;gap:16px;margin-top:18px;align-items:stretch}
+    .col{
+      flex:1;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,255,250,0.98));
+      padding:18px;border-radius:12px;border:1px solid rgba(11,138,86,0.04);
+      box-shadow: 0 8px 20px rgba(11,138,86,0.02);
+    }
+    .col h3{margin:0 0 10px 0;color:var(--green-1);font-weight:700;font-size:18px}
+
+    table{width:100%;border-collapse:collapse;color:var(--muted);font-size:16px}
+    thead th{background:linear-gradient(90deg, rgba(11,138,86,0.06), rgba(47,91,74,0.03));color:var(--green-1);font-weight:700;padding:10px;border-bottom:2px solid rgba(11,138,86,0.08)}
+    tbody td{padding:10px;border-bottom:1px dashed rgba(11,138,86,0.06)}
+    tbody tr:last-child td{border-bottom:0}
+
+    .ann{margin-top:14px;padding:14px;border-radius:10px;border:1px solid rgba(11,138,86,0.05);background:linear-gradient(180deg, rgba(245,255,245,0.6), rgba(255,255,255,0.4)); color:var(--muted)}
+    .runwrap{margin-top:12px;overflow:hidden;border-radius:8px;padding:10px;background:linear-gradient(90deg, rgba(11,138,86,0.06), rgba(47,91,74,0.02));border:1px solid rgba(11,138,86,0.06)}
+    .runtext{white-space:nowrap;display:inline-block;padding-left:100%;animation:run 22s linear infinite;color:var(--green-2);font-weight:600}
+    @keyframes run{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+    @media(max-width:1100px){.two-cols{flex-direction:column}}
+    /* Perbesar kolom Tanggal pada Laporan Keuangan */
+    #laporanTable td:first-child,
+    #laporanTable th:first-child {
+        width: 180px !important;
+    white-space: nowrap; /* Supaya tanggal tidak turun ke bawah */
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="card-main">
+
+      <!-- HEADER -->
+      <header class="header">
+        <div class="brand">
+          <div class="logo"><img src="ssijoko.png" width="100"></div>
+          <div>
+            <h1>Portal Masjid Al-Barkah</h1>
+            <p class="small">Informasi jadwal sholat, keuangan, dan pengumuman</p>
+          </div>
+        </div>
+
+        <div class="text-end">
+          <div style="font-size:14px;color:var(--muted)">Lokasi</div>
+          <div style="font-weight:700;color:var(--green-1);font-size:16px" id="locationLabel">—</div>
+        </div>
+      </header>
+
+      <!-- JADWAL SHOLAT -->
+      <section class="top-row">
+        <div class="pray">
+          <div class="left">
+            <h2>Waktu Sholat (Realtime)</h2>
+            <div class="small" id="dateLabel">—</div>
+          </div>
+
+          <div style="flex:1">
+            <div class="times" id="prayerBoxes"></div>
+            <div class="countdown" id="nextInfo"></div>
+          </div>
+        </div>
+
+        <div class="clock-card">
+          <div style="font-size:12px;color:var(--muted)">Jam Sekarang</div>
+          <div class="clock-now" id="clockNow">--:--:--</div>
+          <div class="hijri-now" id="hijriNow">—</div>
+        </div>
+      </section>
+
+      <!-- TABEL -->
+      <section class="two-cols">
+        <div class="col">
+          <h3>Laporan Keuangan</h3>
+          <div class="table-responsive">
+            <table id="laporanTable">
+              <thead>
+                <tr><th>Tanggal</th><th>Saldo Awal</th><th>Kotak Amal Jumat</th><th>Pengeluaran</th><th>Saldo Terakhir</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col">
+          <h3>Khotib Jumat</h3>
+          <div class="table-responsive">
+            <table id="khotibTable">
+              <thead><tr><th>Tanggal</th><th>Khotib</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PENGUMUMAN -->
+      <div class="ann">
+        <strong>Pengumuman :</strong>
+        <div id="pengumumanList" style="margin-top:10px"></div>
+      </div>
+
+      <div class="runwrap">
+        <div class="runtext" id="runText">Selamat datang di portal masjid — pengumuman terbaru akan tampil di sini.</div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+  const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxUtury5NX15DIQnkZLsvfqFO6veFU22rRfhmrkoDGaVv6Zuij7gGTV8GfAQJd_pFnh/exec';
+  const CITY = 'Jakarta';
+  const COUNTRY = 'Indonesia';
+  const ALADHAN_BYCITY = true;
+
+  function $q(sel){return document.querySelector(sel)}
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"]/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]) }
+
+  function formatTanggalOnly(tgl){
+    if(!tgl) return '';
+    try {
+      const d = new Date(tgl);
+      if(isNaN(d)) return tgl;
+      return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+    } catch(e){ return tgl; }
+  }
+
+  function startClock(){
+    const clock = $q('#clockNow');
+    function tick(){
+      clock.textContent = new Date().toLocaleTimeString();
+    }
+    tick(); setInterval(tick,1000);
+  }
+
+  async function fetchSheet(sheet){
+    try{
+      const res = await fetch(`${GAS_WEBAPP_URL}?sheet=${sheet}`);
+      const json = await res.json();
+      return json.rows || [];
+    }catch(e){ return [] }
+  }
+
+  async function loadAllData(){
+    /* Laporan */
+    const lap = await fetchSheet('Laporan');
+    const lapTbody = $q('#laporanTable tbody');
+    lapTbody.innerHTML = '';
+
+    if(lap.length===0){
+      lapTbody.innerHTML = '<tr><td colspan="5">Belum ada data</td></tr>';
+    } else {
+      lap.slice(0,10).forEach(r=>{
+        const tr = document.createElement('tr');
+        ['Tanggal','Saldo Awal','Kotak Amal Jumat','Pengeluaran','Saldo Terakhir'].forEach(k=>{
+          const td = document.createElement('td');
+          td.textContent = (k==='Tanggal') ? formatTanggalOnly(r[k]) : (r[k]||'');
+          tr.appendChild(td);
+        });
+        lapTbody.appendChild(tr);
+      });
+    }
+
+    /* Khotib */
+    const kh = await fetchSheet('Khotib');
+    const khTbody = $q('#khotibTable tbody');
+    khTbody.innerHTML = '';
+
+    if(kh.length===0){
+      khTbody.innerHTML = '<tr><td colspan="2">Belum ada data</td></tr>';
+    } else {
+      kh.slice(0,10).forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${formatTanggalOnly(r['Tanggal'])}</td><td>${escapeHtml(r['Khotib'])}</td>`;
+        khTbody.appendChild(tr);
+      });
+    }
+
+    /* Pengumuman */
+    const p = await fetchSheet('Pengumuman');
+    const pWrap = $q('#pengumumanList');
+    pWrap.innerHTML = '';
+
+    if(p.length===0){
+      pWrap.innerHTML = '<div>Belum ada pengumuman</div>';
+    } else {
+      p.forEach(r=>{
+        const d = document.createElement('div');
+        d.textContent = r['Pengumuman'];
+        pWrap.appendChild(d);
+      });
+      $q('#runText').textContent = p.map(x=>x['Pengumuman']).join(' • ');
+    }
+  }
+
+  /* AlAdhan */
+  let currentTimings = null;
+
+  async function fetchPrayerTimes(){
+    try{
+      const url = ALADHAN_BYCITY
+        ? `https://api.aladhan.com/v1/timingsByCity?city=${CITY}&country=${COUNTRY}&method=11`
+        : `https://api.aladhan.com/v1/timings?latitude=-6.2&longitude=106.816666&method=11`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      currentTimings = data.data;
+      renderPrayerTimes(data.data);
+    }catch(e){ console.log(e); }
+  }
+
+  function renderPrayerTimes(data){
+    const boxes = $q('#prayerBoxes');
+    boxes.innerHTML = '';
+
+    const times = {
+      Fajr: data.timings.Fajr,
+      Dhuhr: data.timings.Dhuhr,
+      Asr: data.timings.Asr,
+      Maghrib: data.timings.Maghrib,
+      Isha: data.timings.Isha
+    };
+
+    $q('#locationLabel').textContent = `${CITY}, ${COUNTRY}`;
+    $q('#dateLabel').textContent = `${data.date.readable} — Hijri: ${data.date.hijri.date} ${data.date.hijri.month.en}`;
+
+    Object.entries(times).forEach(([name,t])=>{
+      const div = document.createElement('div');
+      div.className = 'pbox';
+      div.innerHTML = `<div class="name">${name}</div><div class="time">${t}</div>`;
+      boxes.appendChild(div);
+    });
+
+    updateNextCountdown();
+  }
+
+  function updateNextCountdown(){
+    if(!currentTimings) return;
+
+    const now = new Date();
+    const today = new Date();
+    const keys = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+
+    const parts = keys.map(k=>{
+      const x = currentTimings.timings[k].match(/\d{1,2}:\d{2}/);
+      if(!x) return null;
+      const [hh,mm] = x[0].split(':').map(Number);
+      return {name:k, date:new Date(today.getFullYear(), today.getMonth(), today.getDate(), hh, mm)};
+    }).filter(Boolean);
+
+    let next = parts.find(p=>p.date > now);
+    if(!next){
+      const fajr = parts.find(p=>p.name==='Fajr');
+      next = {name:'Fajr', date:new Date(fajr.date.getTime()+86400000)};
+    }
+
+    function tick(){
+      const now2 = new Date();
+      const diff = next.date - now2;
+      if(diff<=0){ fetchPrayerTimes(); return; }
+
+      const hrs = Math.floor(diff/36e5);
+      const mins = Math.floor((diff%36e5)/6e4);
+      const secs = Math.floor((diff%6e4)/1000);
+
+      $q('#nextInfo').textContent = `Berikutnya: ${next.name} dalam ${hrs}j ${mins}m ${secs}s`;
+    }
+
+    tick();
+    clearInterval(window._nextTick);
+    window._nextTick = setInterval(tick,1000);
+  }
+
+  async function init(){
+    startClock();
+    await loadAllData();
+    setInterval(loadAllData,60000);
+
+    await fetchPrayerTimes();
+    setInterval(fetchPrayerTimes,300000);
+
+    /* BAGIAN YANG TERPOTONG — SAYA PERBAIKI TANPA MENGUBAH LOGIKA */
+    setInterval(()=>{
+      const el = $q('#runText');
+      if(el) el.style.opacity = '1';
+    },5000);
+
+  }
+
+  init();
+  </script>
+
+</body>
+</html>
