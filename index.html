@@ -171,8 +171,8 @@
     gap:20px;
     margin-top:22px;
   }
-  .col{
-    flex:1;
+  .col-1{
+    flex:70%;
     border-radius:14px;
     padding:20px;
 
@@ -181,7 +181,24 @@
     box-shadow:0 5px 15px rgba(0,0,0,0.05);
   }
 
-  .col h3{
+  .col-2{
+    flex:30%;
+    border-radius:14px;
+    padding:20px;
+
+    background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(240,255,250,0.9));
+    border:1px solid rgba(14,163,127,0.1);
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  .col-1  h3{
+    margin:0 0 10px;
+    font-size:19px;
+    font-weight:800;
+    color:var(--emerald-1);
+  }
+
+  .col-2  h3{
     margin:0 0 10px;
     font-size:19px;
     font-weight:800;
@@ -192,7 +209,7 @@
   table{
     width:100%;
     border-collapse:collapse;
-    font-size:16px;
+    font-size:14px;
   }
   thead th{
     padding:10px;
@@ -258,7 +275,7 @@
       <!-- HEADER -->
       <header class="header">
         <div class="brand">
-          <div class="logo"><img src="https://ssi-soa.com/assets/img/logossitransparant.png" width="100"></div>
+          <div class="logo"><img src="https://ssi-soa.com/assets/img/logossitransparant.png" width="100" alt="logo"></div>
           <div>
             <h1>Portal Masjid Al-Barkah</h1>
             <p class="small">Informasi jadwal sholat, keuangan, dan pengumuman</p>
@@ -294,7 +311,7 @@
 
       <!-- TABEL -->
       <section class="two-cols">
-        <div class="col">
+        <div class="col-1">
           <h3>Laporan Keuangan</h3>
           <div class="table-responsive">
             <table id="laporanTable">
@@ -306,7 +323,7 @@
           </div>
         </div>
 
-        <div class="col">
+        <div class="col-2">
           <h3>Khotib Jumat</h3>
           <div class="table-responsive">
             <table id="khotibTable">
@@ -336,8 +353,14 @@
   const COUNTRY = 'Indonesia';
   const ALADHAN_BYCITY = true;
 
-  function $q(sel){return document.querySelector(sel)}
-  function escapeHtml(s){ return String(s||'').replace(/[&<>"]/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]) }
+  function $q(sel){ return document.querySelector(sel); }
+
+  // More robust escapeHtml (avoid arrow/object ambiguity)
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"]/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+    });
+  }
 
   function formatTanggalOnly(tgl){
     if(!tgl) return '';
@@ -358,10 +381,23 @@
 
   async function fetchSheet(sheet){
     try{
-      const res = await fetch(`${GAS_WEBAPP_URL}?sheet=${sheet}`);
+      const res = await fetch(`${GAS_WEBAPP_URL}?sheet=${encodeURIComponent(sheet)}`);
       const json = await res.json();
       return json.rows || [];
-    }catch(e){ return [] }
+    }catch(e){ console.warn('fetchSheet error', e); return []; }
+  }
+
+  // Format angka ke Rupiah
+  function formatRupiah(angka){
+    if(angka === null || angka === undefined || angka === '') return "Rp 0";
+    // Remove non-digit except minus and dot, handle parentheses etc.
+    const s = String(angka).replace(/[^\d\-\.]/g, '');
+    const isNegative = s.startsWith('-');
+    const cleaned = s.replace('-', '');
+    // If there is decimal, we will ignore decimals for currency whole rupiah
+    const intPart = parseInt(cleaned.split('.')[0] || '0', 10);
+    if(isNaN(intPart)) return "Rp 0";
+    return (isNegative ? '- ' : '') + 'Rp ' + intPart.toLocaleString('id-ID');
   }
 
   async function loadAllData(){
@@ -370,16 +406,23 @@
     const lapTbody = $q('#laporanTable tbody');
     lapTbody.innerHTML = '';
 
-    if(lap.length===0){
+    if(!lap || lap.length === 0){
       lapTbody.innerHTML = '<tr><td colspan="5">Belum ada data</td></tr>';
     } else {
+      // tampilkan maksimal 10 baris terbaru (asumsi sudah berurutan di sheet)
       lap.slice(0,10).forEach(r=>{
         const tr = document.createElement('tr');
+
         ['Tanggal','Saldo Awal','Kotak Amal Jumat','Pengeluaran','Saldo Terakhir'].forEach(k=>{
           const td = document.createElement('td');
-          td.textContent = (k==='Tanggal') ? formatTanggalOnly(r[k]) : (r[k]||'');
+          if(k === 'Tanggal'){
+            td.textContent = formatTanggalOnly(r[k]);
+          } else {
+            td.textContent = formatRupiah(r[k]);
+          }
           tr.appendChild(td);
         });
+
         lapTbody.appendChild(tr);
       });
     }
@@ -389,12 +432,17 @@
     const khTbody = $q('#khotibTable tbody');
     khTbody.innerHTML = '';
 
-    if(kh.length===0){
+    if(!kh || kh.length===0){
       khTbody.innerHTML = '<tr><td colspan="2">Belum ada data</td></tr>';
     } else {
       kh.slice(0,10).forEach(r=>{
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${formatTanggalOnly(r['Tanggal'])}</td><td>${escapeHtml(r['Khotib'])}</td>`;
+        const td1 = document.createElement('td');
+        td1.textContent = formatTanggalOnly(r['Tanggal']);
+        const td2 = document.createElement('td');
+        td2.textContent = escapeHtml(r['Khotib']);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
         khTbody.appendChild(tr);
       });
     }
@@ -404,15 +452,15 @@
     const pWrap = $q('#pengumumanList');
     pWrap.innerHTML = '';
 
-    if(p.length===0){
+    if(!p || p.length===0){
       pWrap.innerHTML = '<div>Belum ada pengumuman</div>';
     } else {
       p.forEach(r=>{
         const d = document.createElement('div');
-        d.textContent = r['Pengumuman'];
+        d.textContent = r['Pengumuman'] || '';
         pWrap.appendChild(d);
       });
-      $q('#runText').textContent = p.map(x=>x['Pengumuman']).join(' • ');
+      $q('#runText').textContent = p.map(x=>x['Pengumuman']).filter(Boolean).join(' • ');
     }
   }
 
@@ -422,14 +470,18 @@
   async function fetchPrayerTimes(){
     try{
       const url = ALADHAN_BYCITY
-        ? `https://api.aladhan.com/v1/timingsByCity?city=${CITY}&country=${COUNTRY}&method=11`
+        ? `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(CITY)}&country=${encodeURIComponent(COUNTRY)}&method=11`
         : `https://api.aladhan.com/v1/timings?latitude=-6.2&longitude=106.816666&method=11`;
 
       const res = await fetch(url);
       const data = await res.json();
-      currentTimings = data.data;
-      renderPrayerTimes(data.data);
-    }catch(e){ console.log(e); }
+      if(data && data.data){
+        currentTimings = data.data;
+        renderPrayerTimes(data.data);
+      } else {
+        console.warn('AlAdhan returned unexpected data', data);
+      }
+    }catch(e){ console.warn('fetchPrayerTimes error', e); }
   }
 
   function renderPrayerTimes(data){
@@ -445,12 +497,14 @@
     };
 
     $q('#locationLabel').textContent = `${CITY}, ${COUNTRY}`;
-    $q('#dateLabel').textContent = `${data.date.readable} — Hijri: ${data.date.hijri.date} ${data.date.hijri.month.en}`;
+    if(data.date && data.date.readable){
+      $q('#dateLabel').textContent = `${data.date.readable} — Hijri: ${data.date.hijri.date} ${data.date.hijri.month.en}`;
+    }
 
     Object.entries(times).forEach(([name,t])=>{
       const div = document.createElement('div');
       div.className = 'pbox';
-      div.innerHTML = `<div class="name">${name}</div><div class="time">${t}</div>`;
+      div.innerHTML = `<div class="name">${escapeHtml(name)}</div><div class="time">${escapeHtml(t)}</div>`;
       boxes.appendChild(div);
     });
 
@@ -465,15 +519,15 @@
     const keys = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
 
     const parts = keys.map(k=>{
-      const x = currentTimings.timings[k].match(/\d{1,2}:\d{2}/);
-      if(!x) return null;
-      const [hh,mm] = x[0].split(':').map(Number);
+      const match = (currentTimings.timings[k] || '').match(/\d{1,2}:\d{2}/);
+      if(!match) return null;
+      const [hh,mm] = match[0].split(':').map(Number);
       return {name:k, date:new Date(today.getFullYear(), today.getMonth(), today.getDate(), hh, mm)};
     }).filter(Boolean);
 
     let next = parts.find(p=>p.date > now);
-    if(!next){
-      const fajr = parts.find(p=>p.name==='Fajr');
+    if(!next && parts.length){
+      const fajr = parts.find(p=>p.name==='Fajr') || parts[0];
       next = {name:'Fajr', date:new Date(fajr.date.getTime()+86400000)};
     }
 
@@ -502,12 +556,11 @@
     await fetchPrayerTimes();
     setInterval(fetchPrayerTimes,300000);
 
-    /* BAGIAN YANG TERPOTONG — SAYA PERBAIKI TANPA MENGUBAH LOGIKA */
+    /* kecilkan efek muncul running text */
     setInterval(()=>{
       const el = $q('#runText');
       if(el) el.style.opacity = '1';
     },5000);
-
   }
 
   init();
