@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donasi Bencana Sumatera</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://radarselatan.bacakoran.co/upload/b6fefba3858fa4ecf38166ab54f11959.JPG') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #f8f9fa;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        
+        .header {
+            padding: 20px 0;
+            text-align: center;
+            background: rgba(0, 40, 85, 0.8);
+            border-bottom: 3px solid #FFD700;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #e9ecef;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card-custom {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: #f8f9fa;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header-custom {
+            background-color: rgba(220, 53, 69, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .card-body-custom {
+            padding: 25px;
+        }
+        
+        .donation-highlight {
+            background-color: rgba(255, 193, 7, 0.25);
+            border-left: 5px solid #FFC107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .bank-details {
+            background: rgba(13, 110, 253, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid rgba(13, 110, 253, 0.5);
+            margin-top: 20px;
+        }
+        
+        .bank-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #FFD700;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin: 15px 0;
+        }
+        
+        .account-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+        
+        .bank-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #20c997;
+        }
+        
+        .disaster-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+            border-top: 2px solid #dc3545;
+        }
+        
+        .info-icon {
+            color: #20c997;
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-donate {
+            background: linear-gradient(to right, #dc3545, #c82333);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-donate:hover {
+            background: linear-gradient(to right, #c82333, #bd2130);
+            transform: scale(1.05);
+        }
+        
+        .counter {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        
+        .progress {
+            height: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, #28a745, #20c997);
+            border-radius: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .bank-number {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            
+            .account-name {
+                font-size: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-hands-helping"></i> BANTU KORBAN BENCANA SUMATERA</h1>
+            
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <!-- Gambar Bencana -->
+            <div class="col-lg-6 mb-1">
+                <div class="card-custom">
+                    <div class="card-header-custom">
+                        <i class="fas fa-image"></i> Kondisi Terkini Bencana
+                    </div>
+                    <div class="card-body-custom">
+                        <img src="https://akcdn.detik.net.id/visual/2025/11/29/korban-tewas-banjir-di-agam-1764398887713_169.jpeg?w=400&q=90" alt="Bencana Banjir di Sumatera" class="disaster-img">                    
+                        <div class="row text-center mt-1">
+                            <div class="col-md-4">
+                                <div class="counter">967</div>
+                                <div>Korban Meninggal</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="counter">5000</div>
+                                <div>Korban Luka-luka</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="counter">850</div>
+                                <div>Pengungsi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <!-- Informasi Donasi -->
+            <div class="col-lg-6 mb-4">
+                <div class="card-custom">
+                    <div class="card-header-custom">
+                        <i class="fas fa-donate"></i> Donasi untuk Korban Bencana
+                    </div>
+                    <div class="card-body-custom">
+                        
+                        <!-- Informasi Rekening -->
+                        <div class="bank-details">
+                            <h3><i class="fas fa-university"></i> REKENING DONASI</h3>
+                            <div class="bank-name">BANK BNI (Bank Negara Indonesia)</div>
+                            <div class="bank-number">1791341408</div>
+                            <div class="account-name">WISNU RINALDI SHOTANG</div>
+                            <p class="mt-3">Silakan transfer donasi Anda ke rekening di atas. Setelah transfer, harap konfirmasi melalui WhatsApp ke 0812-3456-7890 dengan menyertakan bukti transfer.</p>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                
+                <!-- Kontak & Verifikasi -->
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2025 Relawan Bencana Sumatera. Semua donasi akan disalurkan secara transparan dan akuntabel.</p>
+            <p>Website ini dibuat untuk menginformasikan kebutuhan donasi bencana banjir bandang di Sumatera Barat.</p>
+            
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS dengan Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 10000); // 10 detik
+  </script>
+            
+    </script>
+</body>
+</html>
